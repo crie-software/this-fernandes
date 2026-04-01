@@ -6,7 +6,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#F5F3F0">
+  
   <title>Thais Fernandes Fotografia</title>
+  
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/KY9QvD84/Design-sem-nome-1-removebg-preview.png">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/KY9QvD84/Design-sem-nome-1-removebg-preview.png">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
     html, body {
@@ -16,7 +23,7 @@
       height: 100%;
       overflow: hidden;
       background-color: #F5F3F0;
-      font-family: 'Playfair Display', serif;
+      font-family: 'Roboto', sans-serif;
     }
     
     .app-frame {
@@ -42,7 +49,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      z-index: 9000;
       transition: opacity 0.6s ease;
     }
 
@@ -66,7 +73,74 @@
       color: #8C847A;
       font-size: 0.95rem;
       letter-spacing: 1px;
-      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Tela de Aviso do Instagram */
+    #instagram-warning {
+      display: none; /* Escondido por padrão */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #F5F3F0;
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .ig-icon {
+      font-size: 3.5rem;
+      color: #7D6553;
+      margin-bottom: 20px;
+    }
+
+    .ig-title {
+      font-family: 'Playfair Display', serif;
+      color: #2A2A2A;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      margin-top: 0;
+    }
+
+    .ig-text {
+      color: #8C847A;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 400px;
+    }
+
+    .ig-dots-highlight {
+      background-color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      display: inline-block;
+      margin: 10px 0;
+      border: 1px solid rgba(125, 101, 83, 0.2);
+      font-weight: 500;
+      color: #2A2A2A;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .btn-continue {
+      background: transparent;
+      border: 2px solid #7D6553;
+      color: #7D6553;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .btn-continue:hover {
+      background: rgba(125, 101, 83, 0.1);
     }
 
     @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -78,6 +152,20 @@
   </style>
 </head>
 <body>
+
+  <div id="instagram-warning">
+    <i class="fab fa-instagram ig-icon"></i>
+    <h2 class="ig-title">Acesso via Instagram</h2>
+    <p class="ig-text">
+      O navegador interno do Instagram pode bloquear a visualização do seu álbum de fotos.
+    </p>
+    <div class="ig-dots-highlight">
+      <i class="fas fa-ellipsis-h me-2" style="color: #7D6553;"></i> Clique nos 3 pontinhos acima<br>e escolha <strong>"Abrir no navegador"</strong>
+    </div>
+    <button class="btn-continue" onclick="ignorarAvisoInstagram()">
+      Continuar aqui mesmo
+    </button>
+  </div>
 
   <div id="preloader">
     <img src="https://i.postimg.cc/26PdfZcm/IMG-0981.png" alt="Thais Fernandes" class="preloader-logo">
@@ -93,49 +181,62 @@
   </iframe>
 
   <script>
-    // A URL original do seu Google Apps Script
-    const gasBaseUrl = "https://script.google.com/macros/s/AKfycbwtpuhRAf6zKMZH4NJFCWJqH0W5F0DEjpAQPkoUsMx7GE2HzfrQbZ4kbDJIkYssmrWq/exec";
-    const iframe = document.getElementById('main-app-frame');
-    const preloader = document.getElementById('preloader');
+    // --- Lógica de Detecção do Instagram ---
+    const isInstagram = navigator.userAgent.toLowerCase().includes('instagram');
+    const warningScreen = document.getElementById('instagram-warning');
 
-    function showPreloader() {
-      preloader.style.display = 'flex';
-      setTimeout(() => preloader.style.opacity = '1', 10);
-      iframe.style.opacity = '0';
+    if (isInstagram) {
+      // Se for Instagram, trava a tela no aviso
+      warningScreen.style.display = 'flex';
+    } else {
+      // Se for navegador normal, inicia o app imediatamente
+      iniciarAplicativo();
     }
 
-    function hidePreloader() {
-      preloader.style.opacity = '0';
-      iframe.style.opacity = '1';
-      setTimeout(() => preloader.style.display = 'none', 600);
+    function ignorarAvisoInstagram() {
+      warningScreen.style.display = 'none';
+      iniciarAplicativo();
     }
 
-    // 1. Oculta a tela de carregamento quando o Iframe termina de renderizar
-    iframe.addEventListener('load', hidePreloader);
+    // --- Lógica Principal do Aplicativo ---
+    function iniciarAplicativo() {
+      const gasBaseUrl = "https://script.google.com/macros/s/AKfycbwtpuhRAf6zKMZH4NJFCWJqH0W5F0DEjpAQPkoUsMx7GE2HzfrQbZ4kbDJIkYssmrWq/exec";
+      const iframe = document.getElementById('main-app-frame');
+      const preloader = document.getElementById('preloader');
 
-    // 2. Inicia o aplicativo repassando os parâmetros atuais (ex: ?page=admin)
-    iframe.src = gasBaseUrl + window.location.search;
-
-    // 3. Central de escuta de comandos do Google Apps Script
-    window.addEventListener("message", function(event) {
-      if (!event.data) return;
-
-      // Comando de Login bem-sucedido
-      if (event.data.action === "login_success") {
-        showPreloader();
-        const novosParametros = "?page=client&code=" + event.data.code;
-        window.history.pushState({ path: novosParametros }, '', novosParametros);
-        iframe.src = gasBaseUrl + novosParametros;
+      function showPreloader() {
+        preloader.style.display = 'flex';
+        setTimeout(() => preloader.style.opacity = '1', 10);
+        iframe.style.opacity = '0';
       }
-      
-      // Comando para Sair/Voltar para a Home
-      else if (event.data.action === "navigate_home") {
-        showPreloader();
-        const urlLimpa = window.location.pathname; // Pega só o caminho (ex: /this-fernandes/)
-        window.history.pushState({ path: urlLimpa }, '', urlLimpa);
-        iframe.src = gasBaseUrl;
+
+      function hidePreloader() {
+        preloader.style.opacity = '0';
+        iframe.style.opacity = '1';
+        setTimeout(() => preloader.style.display = 'none', 600);
       }
-    });
+
+      iframe.addEventListener('load', hidePreloader);
+      iframe.src = gasBaseUrl + window.location.search;
+
+      window.addEventListener("message", function(event) {
+        if (!event.data) return;
+
+        if (event.data.action === "login_success") {
+          showPreloader();
+          const novosParametros = "?page=client&code=" + event.data.code;
+          window.history.pushState({ path: novosParametros }, '', novosParametros);
+          iframe.src = gasBaseUrl + novosParametros;
+        }
+        
+        else if (event.data.action === "navigate_home") {
+          showPreloader();
+          const urlLimpa = window.location.pathname; 
+          window.history.pushState({ path: urlLimpa }, '', urlLimpa);
+          iframe.src = gasBaseUrl;
+        }
+      });
+    }
   </script>
 
 </body>
