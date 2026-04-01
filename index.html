@@ -9,21 +9,29 @@
   
   <title>Thais Fernandes Fotografia</title>
   
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/KY9QvD84/Design-sem-nome-1-removebg-preview.png">
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/KY9QvD84/Design-sem-nome-1-removebg-preview.png">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/bvLk9YXp/Design-sem-nome-(1).png">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/bvLk9YXp/Design-sem-nome-(1).png">
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <style>
+    :root {
+      --bg-color: #F5F3F0;
+      --dark-leaves: #7D6553;
+      --light-leaves: #CFAA6D;
+      --text-dark: #2A2A2A;
+      --text-muted: #8C847A;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #F5F3F0;
-      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-color);
+      font-family: 'Inter', sans-serif;
     }
     
     .app-frame {
@@ -38,13 +46,14 @@
       transition: opacity 0.5s ease;
     }
 
+    /* Tela de Carregamento */
     #preloader {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #F5F3F0;
+      background-color: var(--bg-color);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -54,93 +63,134 @@
     }
 
     .preloader-logo {
-      max-width: 160px;
-      margin-bottom: 30px;
+      max-width: 140px;
+      margin-bottom: 25px;
       animation: pulse 2s infinite ease-in-out;
     }
 
     .spinner {
-      width: 45px;
-      height: 45px;
-      border: 4px solid rgba(125, 101, 83, 0.15);
-      border-left-color: #7D6553;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(125, 101, 83, 0.15);
+      border-left-color: var(--dark-leaves);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
 
     .loading-text {
       margin-top: 15px;
-      color: #8C847A;
-      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
       letter-spacing: 1px;
     }
 
-    /* Tela de Aviso do Instagram */
-    #instagram-warning {
+    /* Tela de Aviso Bloqueador (iOS + Instagram) */
+    #ios-warning-screen {
       display: none; /* Escondido por padrão */
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #F5F3F0;
+      background-color: rgba(245, 243, 240, 0.98);
+      backdrop-filter: blur(10px);
       z-index: 9999;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 30px;
-      text-align: center;
+      padding: 20px;
     }
 
-    .ig-icon {
-      font-size: 3.5rem;
-      color: #7D6553;
-      margin-bottom: 20px;
-    }
-
-    .ig-title {
-      font-family: 'Playfair Display', serif;
-      color: #2A2A2A;
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-      margin-top: 0;
-    }
-
-    .ig-text {
-      color: #8C847A;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 30px;
+    .warning-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 25px;
+      width: 100%;
       max-width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border: 1px solid rgba(125, 101, 83, 0.1);
     }
 
-    .ig-dots-highlight {
-      background-color: white;
-      padding: 8px 15px;
-      border-radius: 8px;
-      display: inline-block;
-      margin: 10px 0;
-      border: 1px solid rgba(125, 101, 83, 0.2);
-      font-weight: 500;
-      color: #2A2A2A;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    .icon-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: var(--dark-leaves);
     }
 
-    .btn-continue {
-      background: transparent;
-      border: 2px solid #7D6553;
-      color: #7D6553;
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-weight: 500;
+    .warning-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--text-dark);
+      font-size: 1.6rem;
+      margin: 0 0 10px 0;
+    }
+
+    .warning-text {
+      color: var(--text-muted);
       font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 15px;
+      line-height: 1.5;
+      margin-bottom: 25px;
     }
 
-    .btn-continue:hover {
-      background: rgba(125, 101, 83, 0.1);
+    .instruction-box {
+      background: var(--bg-color);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 25px;
+    }
+
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    
+    .instruction-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-icon {
+      background: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark-leaves);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, var(--light-leaves), var(--dark-leaves));
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      width: 100%;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-copy:active {
+      transform: scale(0.98);
     }
 
     @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -153,18 +203,33 @@
 </head>
 <body>
 
-  <div id="instagram-warning">
-    <i class="fab fa-instagram ig-icon"></i>
-    <h2 class="ig-title">Acesso via Instagram</h2>
-    <p class="ig-text">
-      O navegador interno do Instagram pode bloquear a visualização do seu álbum de fotos.
-    </p>
-    <div class="ig-dots-highlight">
-      <i class="fas fa-ellipsis-h me-2" style="color: #7D6553;"></i> Clique nos 3 pontinhos acima<br>e escolha <strong>"Abrir no navegador"</strong>
+  <div id="ios-warning-screen">
+    <div class="warning-card">
+      <div class="icon-group">
+        <i class="fab fa-apple"></i>
+        <i class="fas fa-times" style="font-size: 1.2rem; color: #dc3545;"></i>
+        <i class="fab fa-instagram"></i>
+      </div>
+      <h2 class="warning-title">Ação Necessária</h2>
+      <p class="warning-text">
+        O sistema de segurança do iPhone bloqueia galerias dentro do Instagram. Para acessar suas fotos:
+      </p>
+      
+      <div class="instruction-box">
+        <div class="instruction-step">
+          <div class="step-icon"><i class="fas fa-ellipsis-h"></i></div>
+          <div>Toque nos <strong>3 pontinhos</strong> no canto superior da tela.</div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-icon"><i class="fab fa-safari"></i></div>
+          <div>Escolha a opção <strong>"Abrir no Safari"</strong> ou <strong>"Abrir no navegador"</strong>.</div>
+        </div>
+      </div>
+
+      <button class="btn-copy" onclick="copiarLinkSite(this)">
+        <i class="far fa-copy"></i> Copiar Link do Site
+      </button>
     </div>
-    <button class="btn-continue" onclick="ignorarAvisoInstagram()">
-      Continuar aqui mesmo
-    </button>
   </div>
 
   <div id="preloader">
@@ -181,24 +246,53 @@
   </iframe>
 
   <script>
-    // --- Lógica de Detecção do Instagram ---
-    const isInstagram = navigator.userAgent.toLowerCase().includes('instagram');
-    const warningScreen = document.getElementById('instagram-warning');
+    // --- 1. Lógica de Detecção Inteligente (Apenas iOS + Instagram) ---
+    const ua = navigator.userAgent.toLowerCase();
+    const isInstagram = ua.includes('instagram');
+    const isIOS = /iphone|ipad|ipod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    if (isInstagram) {
-      // Se for Instagram, trava a tela no aviso
-      warningScreen.style.display = 'flex';
+    if (isInstagram && isIOS) {
+      // Trava o usuário na tela de aviso. Não chama a inicialização do app.
+      document.getElementById('ios-warning-screen').style.display = 'flex';
+      // Esconde o preloader giratório para não confundir
+      document.getElementById('preloader').style.display = 'none'; 
     } else {
-      // Se for navegador normal, inicia o app imediatamente
+      // É Android, ou já está no Safari/Chrome. Libera o acesso!
       iniciarAplicativo();
     }
 
-    function ignorarAvisoInstagram() {
-      warningScreen.style.display = 'none';
-      iniciarAplicativo();
+    // --- 2. Função "Plano B" (Copiar link) ---
+    function copiarLinkSite(btn) {
+      const link = window.location.href;
+      
+      // Tenta usar a área de transferência moderna
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(() => {
+          mostrarSucessoCopia(btn);
+        });
+      } else {
+        // Método antigo de fallback
+        const textArea = document.createElement("textarea");
+        textArea.value = link;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+        mostrarSucessoCopia(btn);
+      }
     }
 
-    // --- Lógica Principal do Aplicativo ---
+    function mostrarSucessoCopia(btn) {
+      const originalText = btn.innerHTML;
+      btn.style.background = "#28a745"; // Fica verde
+      btn.innerHTML = '<i class="fas fa-check"></i> Link Copiado!';
+      setTimeout(() => {
+        btn.style.background = ""; // Volta pro degradê original
+        btn.innerHTML = originalText;
+      }, 3000);
+    }
+
+    // --- 3. Lógica Principal do Aplicativo (Comunicações Inivisíveis) ---
     function iniciarAplicativo() {
       const gasBaseUrl = "https://script.google.com/macros/s/AKfycbwtpuhRAf6zKMZH4NJFCWJqH0W5F0DEjpAQPkoUsMx7GE2HzfrQbZ4kbDJIkYssmrWq/exec";
       const iframe = document.getElementById('main-app-frame');
@@ -216,12 +310,17 @@
         setTimeout(() => preloader.style.display = 'none', 600);
       }
 
+      // Oculta o preloader quando o GAS termina de carregar
       iframe.addEventListener('load', hidePreloader);
+      
+      // Carrega o iframe repassando os parâmetros da URL atual
       iframe.src = gasBaseUrl + window.location.search;
 
+      // Escuta os comandos que vêm do Google Apps Script
       window.addEventListener("message", function(event) {
         if (!event.data) return;
 
+        // Sucesso no Login -> Muda a URL do Github e do iframe
         if (event.data.action === "login_success") {
           showPreloader();
           const novosParametros = "?page=client&code=" + event.data.code;
@@ -229,6 +328,7 @@
           iframe.src = gasBaseUrl + novosParametros;
         }
         
+        // Voltar para a Home / Sair -> Limpa a URL
         else if (event.data.action === "navigate_home") {
           showPreloader();
           const urlLimpa = window.location.pathname; 
