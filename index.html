@@ -40,14 +40,21 @@
   </iframe>
 
   <script>
-    // 1. URL base fixa do seu sistema no Google Apps Script
+    // Carrega o sistema do Google com os parâmetros atuais
     const gasBaseUrl = "https://script.google.com/macros/s/AKfycbwtpuhRAf6zKMZH4NJFCWJqH0W5F0DEjpAQPkoUsMx7GE2HzfrQbZ4kbDJIkYssmrWq/exec";
-    
-    // 2. Captura tudo que vem depois da interrogação na URL do GitHub (ex: ?page=client&code=SFJVSO)
     const urlParams = window.location.search;
-    
-    // 3. Junta o link do Google com os parâmetros e injeta no iframe
     document.getElementById('main-app-frame').src = gasBaseUrl + urlParams;
+
+    // Fica escutando as mensagens enviadas pelo Google Apps Script
+    window.addEventListener("message", function(event) {
+      // Verifica se a mensagem veio com a ação de sucesso
+      if (event.data && event.data.action === "login_success") {
+        
+        // Agora sim! Redireciona para a pasta correta do seu projeto com o código do cliente
+        window.location.href = "https://crie-software.github.io/this-fernandes/?page=client&code=" + event.data.code;
+        
+      }
+    });
   </script>
 
 </body>
