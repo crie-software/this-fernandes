@@ -16,7 +16,7 @@
       height: 100%;
       overflow: hidden;
       background-color: #F5F3F0;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Playfair Display', serif;
     }
     
     .app-frame {
@@ -27,11 +27,10 @@
       height: 100%;
       border: none;
       display: block;
-      opacity: 0; /* Começa invisível */
+      opacity: 0; 
       transition: opacity 0.5s ease;
     }
 
-    /* Tela de Carregamento (Preloader) */
     #preloader {
       position: fixed;
       top: 0;
@@ -53,12 +52,11 @@
       animation: pulse 2s infinite ease-in-out;
     }
 
-    /* Spinner Animado com as cores da sua marca */
     .spinner {
       width: 45px;
       height: 45px;
-      border: 4px solid rgba(125, 101, 83, 0.15); /* Fundo clarinho */
-      border-left-color: #7D6553; /* Cor principal (dark-leaves) */
+      border: 4px solid rgba(125, 101, 83, 0.15);
+      border-left-color: #7D6553;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -68,12 +66,10 @@
       color: #8C847A;
       font-size: 0.95rem;
       letter-spacing: 1px;
+      font-family: 'Roboto', sans-serif;
     }
 
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
+    @keyframes spin { 100% { transform: rotate(360deg); } }
     @keyframes pulse {
       0% { transform: scale(0.98); opacity: 0.9; }
       50% { transform: scale(1.02); opacity: 1; }
@@ -97,36 +93,47 @@
   </iframe>
 
   <script>
-    // 1. Carrega o sistema do Google com os parâmetros atuais
+    // A URL original do seu Google Apps Script
     const gasBaseUrl = "https://script.google.com/macros/s/AKfycbwtpuhRAf6zKMZH4NJFCWJqH0W5F0DEjpAQPkoUsMx7GE2HzfrQbZ4kbDJIkYssmrWq/exec";
-    const urlParams = window.location.search;
     const iframe = document.getElementById('main-app-frame');
     const preloader = document.getElementById('preloader');
-    
-    // 2. Quando o Google avisar que a tela dele terminou de carregar por completo...
-    iframe.addEventListener('load', function() {
-      // Faz o preloader desaparecer suavemente
+
+    function showPreloader() {
+      preloader.style.display = 'flex';
+      setTimeout(() => preloader.style.opacity = '1', 10);
+      iframe.style.opacity = '0';
+    }
+
+    function hidePreloader() {
       preloader.style.opacity = '0';
-      // Mostra o iframe do aplicativo suavemente
       iframe.style.opacity = '1';
-      
-      // Remove o preloader do caminho após a animação (0.6s)
-      setTimeout(function() {
-        preloader.style.display = 'none';
-      }, 600);
-    });
+      setTimeout(() => preloader.style.display = 'none', 600);
+    }
 
-    // 3. Injeta o link no iframe para começar a baixar
-    iframe.src = gasBaseUrl + urlParams;
+    // 1. Oculta a tela de carregamento quando o Iframe termina de renderizar
+    iframe.addEventListener('load', hidePreloader);
 
-    // 4. Continua escutando o postMessage para o redirecionamento pós-login
+    // 2. Inicia o aplicativo repassando os parâmetros atuais (ex: ?page=admin)
+    iframe.src = gasBaseUrl + window.location.search;
+
+    // 3. Central de escuta de comandos do Google Apps Script
     window.addEventListener("message", function(event) {
-      if (event.data && event.data.action === "login_success") {
-        // Mostra o preloader de novo enquanto redireciona
-        preloader.style.display = 'flex';
-        setTimeout(() => preloader.style.opacity = '1', 10);
-        
-        window.location.href = "https://crie-software.github.io/this-fernandes/?page=client&code=" + event.data.code;
+      if (!event.data) return;
+
+      // Comando de Login bem-sucedido
+      if (event.data.action === "login_success") {
+        showPreloader();
+        const novosParametros = "?page=client&code=" + event.data.code;
+        window.history.pushState({ path: novosParametros }, '', novosParametros);
+        iframe.src = gasBaseUrl + novosParametros;
+      }
+      
+      // Comando para Sair/Voltar para a Home
+      else if (event.data.action === "navigate_home") {
+        showPreloader();
+        const urlLimpa = window.location.pathname; // Pega só o caminho (ex: /this-fernandes/)
+        window.history.pushState({ path: urlLimpa }, '', urlLimpa);
+        iframe.src = gasBaseUrl;
       }
     });
   </script>
