@@ -2,20 +2,26 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#F5F3F0">
   
   <title>Thais Fernandes Fotografia</title>
   
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/bvLk9YXp/Design-sem-nome-(1).png">
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/bvLk9YXp/Design-sem-nome-(1).png">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/KY9QvD84/Design_sem_nome_1_removebg_preview.png">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/KY9QvD84/Design_sem_nome_1_removebg_preview.png">
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <style>
+    /* Reset fundamental para mobile */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     :root {
       --bg-color: #F5F3F0;
       --dark-leaves: #7D6553;
@@ -32,12 +38,16 @@
       overflow: hidden;
       background-color: var(--bg-color);
       font-family: 'Inter', sans-serif;
+      /* Previne o pull-to-refresh (arrastar para atualizar) no iOS que quebra a tela */
+      overscroll-behavior-y: none; 
     }
     
     .app-frame {
       position: fixed;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       border: none;
@@ -46,20 +56,32 @@
       transition: opacity 0.5s ease;
     }
 
-    /* Tela de Carregamento */
-    #preloader {
+    /* Modificado para travar nas 4 pontas da tela, imune às barras do Instagram */
+    #preloader, #ios-warning-screen {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      right: 0;
+      bottom: 0;
       background-color: var(--bg-color);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 20px;
       z-index: 9000;
+    }
+
+    #preloader {
       transition: opacity 0.6s ease;
+    }
+
+    #ios-warning-screen {
+      display: none; /* Só aparece via JS */
+      z-index: 9999;
+      background-color: rgba(245, 243, 240, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .preloader-logo {
@@ -84,74 +106,59 @@
       letter-spacing: 1px;
     }
 
-    /* Tela de Aviso Bloqueador (iOS + Instagram) */
-    #ios-warning-screen {
-      display: none; /* Escondido por padrão */
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(245, 243, 240, 0.98);
-      backdrop-filter: blur(10px);
-      z-index: 9999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
+    /* Card de Aviso Ultra Responsivo */
     .warning-card {
       background: white;
-      border-radius: 24px;
-      padding: 40px 25px;
+      border-radius: 20px;
+      padding: 35px 20px;
       width: 100%;
-      max-width: 400px;
+      max-width: 340px; /* Largura segura até para iPhone SE */
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
       border: 1px solid rgba(125, 101, 83, 0.1);
+      margin: auto; /* Força o centro no Flexbox */
     }
 
     .icon-group {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       margin-bottom: 20px;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       color: var(--dark-leaves);
     }
 
     .warning-title {
       font-family: 'Playfair Display', serif;
       color: var(--text-dark);
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin: 0 0 10px 0;
     }
 
     .warning-text {
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       line-height: 1.5;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .instruction-box {
       background: var(--bg-color);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 12px;
+      padding: 15px;
       text-align: left;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .instruction-step {
       display: flex;
-      align-items: flex-start;
+      align-items: center; /* Alinha ícone e texto no meio */
       gap: 12px;
       margin-bottom: 12px;
       color: var(--text-dark);
-      font-size: 0.9rem;
-      line-height: 1.4;
+      font-size: 0.85rem;
+      line-height: 1.3;
     }
     
     .instruction-step:last-child {
@@ -160,14 +167,14 @@
 
     .step-icon {
       background: white;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--dark-leaves);
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       flex-shrink: 0;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
@@ -176,21 +183,21 @@
       background: linear-gradient(135deg, var(--light-leaves), var(--dark-leaves));
       color: white;
       border: none;
-      padding: 14px 24px;
+      padding: 14px 20px;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       width: 100%;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn-copy:active {
-      transform: scale(0.98);
+      transform: scale(0.96);
     }
 
     @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -207,7 +214,7 @@
     <div class="warning-card">
       <div class="icon-group">
         <i class="fab fa-apple"></i>
-        <i class="fas fa-times" style="font-size: 1.2rem; color: #dc3545;"></i>
+        <i class="fas fa-times" style="font-size: 1rem; color: #dc3545;"></i>
         <i class="fab fa-instagram"></i>
       </div>
       <h2 class="warning-title">Ação Necessária</h2>
@@ -222,7 +229,7 @@
         </div>
         <div class="instruction-step">
           <div class="step-icon"><i class="fab fa-safari"></i></div>
-          <div>Escolha a opção <strong>"Abrir no Safari"</strong> ou <strong>"Abrir no navegador"</strong>.</div>
+          <div>Escolha <strong>"Abrir no Safari"</strong> ou navegador padrão.</div>
         </div>
       </div>
 
@@ -252,9 +259,8 @@
     const isIOS = /iphone|ipad|ipod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
     if (isInstagram && isIOS) {
-      // Trava o usuário na tela de aviso. Não chama a inicialização do app.
+      // Trava o usuário na tela de aviso alterando o display para 'flex'
       document.getElementById('ios-warning-screen').style.display = 'flex';
-      // Esconde o preloader giratório para não confundir
       document.getElementById('preloader').style.display = 'none'; 
     } else {
       // É Android, ou já está no Safari/Chrome. Libera o acesso!
@@ -265,13 +271,11 @@
     function copiarLinkSite(btn) {
       const link = window.location.href;
       
-      // Tenta usar a área de transferência moderna
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(link).then(() => {
           mostrarSucessoCopia(btn);
         });
       } else {
-        // Método antigo de fallback
         const textArea = document.createElement("textarea");
         textArea.value = link;
         document.body.appendChild(textArea);
@@ -284,15 +288,15 @@
 
     function mostrarSucessoCopia(btn) {
       const originalText = btn.innerHTML;
-      btn.style.background = "#28a745"; // Fica verde
+      btn.style.background = "#28a745"; // Verde sucesso
       btn.innerHTML = '<i class="fas fa-check"></i> Link Copiado!';
       setTimeout(() => {
-        btn.style.background = ""; // Volta pro degradê original
+        btn.style.background = ""; // Volta pro gradiente original
         btn.innerHTML = originalText;
       }, 3000);
     }
 
-    // --- 3. Lógica Principal do Aplicativo (Comunicações Inivisíveis) ---
+    // --- 3. Lógica Principal do Aplicativo ---
     function iniciarAplicativo() {
       const gasBaseUrl = "https://script.google.com/macros/s/AKfycbwtpuhRAf6zKMZH4NJFCWJqH0W5F0DEjpAQPkoUsMx7GE2HzfrQbZ4kbDJIkYssmrWq/exec";
       const iframe = document.getElementById('main-app-frame');
@@ -310,17 +314,12 @@
         setTimeout(() => preloader.style.display = 'none', 600);
       }
 
-      // Oculta o preloader quando o GAS termina de carregar
       iframe.addEventListener('load', hidePreloader);
-      
-      // Carrega o iframe repassando os parâmetros da URL atual
       iframe.src = gasBaseUrl + window.location.search;
 
-      // Escuta os comandos que vêm do Google Apps Script
       window.addEventListener("message", function(event) {
         if (!event.data) return;
 
-        // Sucesso no Login -> Muda a URL do Github e do iframe
         if (event.data.action === "login_success") {
           showPreloader();
           const novosParametros = "?page=client&code=" + event.data.code;
@@ -328,7 +327,6 @@
           iframe.src = gasBaseUrl + novosParametros;
         }
         
-        // Voltar para a Home / Sair -> Limpa a URL
         else if (event.data.action === "navigate_home") {
           showPreloader();
           const urlLimpa = window.location.pathname; 
